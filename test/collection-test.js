@@ -10,7 +10,9 @@ module.exports = {
                 console.log(err);
             }
             db = database;
-            callback();
+            db.collection('games').remove(function() {
+                callback();
+            });
         });
     },
     tearDown: function(callback) {
@@ -49,9 +51,41 @@ module.exports = {
                 test.strictEqual(count, 0);
             });
         }).fail(function(err) {
-            test.ok(false, err);
+            test.ok(false, err.stack);
         }).then(function() {
             test.done();
         });
+    },
+    testPreremove: function(test) {
+        test.expect(2);
+        var ids = [];
+        var games = new Collection(db, 'games');
+
+        var pre = function(objectID, next) {
+            ids.pop();
+            next();
+        };
+        games.preRemove(pre);
+
+        games.insert()
+            .then(function(id) {
+                ids.push(id);
+                return games.insert().then(function(id) {
+                    ids.push(id);
+                    return games.insert().then(function(id) {
+                        ids.push(id);
+                    });
+                });
+            }).then(function() {
+                console.log(ids);
+                test.strictEqual(3, ids.length);
+                return games.remove();
+            }).then(function() {
+                test.strictEqual(0, ids.length);
+            }).fail(function(err) {
+                test.ok(false, err.stack);
+            }).then(function() {
+                test.done();
+            });
     }
 };
