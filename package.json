@@ -1,0 +1,17 @@
+{
+    "author": "anserran <angelserranolaguna@gmail.com>",
+    "dependencies": {
+        "q": "1.0.1"
+    },
+    "description": "Library to interact with collection of objects in a mongo database",
+    "devDependencies": {
+        "nodeunit": ">0.0.0",
+        "mongodb": "1.4.8"
+    },
+    "name": "easy-mongo",
+    "preferGlobal": "false",
+    "scripts": {
+        "test": "nodeunit test/"
+    },
+    "version": "0.0.1"
+}
