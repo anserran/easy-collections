@@ -20,7 +20,7 @@ module.exports = {
         callback();
     },
     testCollection: function(test) {
-        test.expect(5);
+        test.expect(6);
 
         var games = new Collection(db, 'games');
         var id;
@@ -44,6 +44,12 @@ module.exports = {
                 .then(function(game) {
                     test.strictEqual('Other title', game.title);
                 });
+        }).then(function() {
+            return games.findAndModify(id, {
+                title: 'Ñor'
+            }).then(function(result) {
+                test.strictEqual(result.title, 'Ñor');
+            });
         }).then(function() {
             return games.removeById(id);
         }).then(function() {
