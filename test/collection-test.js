@@ -27,10 +27,10 @@ module.exports = {
 
         games.insert({
             title: 'My title'
-        }).then(function(objectID) {
-            test.ok(objectID);
-            id = objectID;
-            return games.findById(objectID)
+        }).then(function(docs) {
+            test.ok(docs.length);
+            id = docs[0]._id;
+            return games.findById(id)
                 .then(function(game) {
                     test.strictEqual('My title', game.title);
                 });
