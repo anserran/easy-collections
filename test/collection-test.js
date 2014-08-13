@@ -20,7 +20,7 @@ module.exports = {
         callback();
     },
     testCollection: function(test) {
-        test.expect(6);
+        test.expect(5);
 
         var games = new Collection(db, 'games');
         var id;
@@ -28,8 +28,7 @@ module.exports = {
         games.insert({
             title: 'My title'
         }).then(function(docs) {
-            test.ok(docs.length);
-            id = docs[0]._id;
+            id = docs._id;
             return games.findById(id)
                 .then(function(game) {
                     test.strictEqual('My title', game.title);
@@ -74,12 +73,12 @@ module.exports = {
         games.preRemove(pre);
 
         games.insert()
-            .then(function(id) {
-                ids.push(id);
-                return games.insert().then(function(id) {
-                    ids.push(id);
-                    return games.insert().then(function(id) {
-                        ids.push(id);
+            .then(function(game) {
+                ids.push(game._id);
+                return games.insert().then(function(game) {
+                    ids.push(game._id);
+                    return games.insert().then(function(game) {
+                        ids.push(game._id);
                     });
                 });
             }).then(function() {
