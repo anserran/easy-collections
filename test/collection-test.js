@@ -93,5 +93,38 @@ module.exports = {
             }).then(function() {
                 test.done();
             });
+    },
+    testFilter: function(test) {
+        test.expect(6);
+
+        var users = new Collection(db, 'users');
+        users.setFilter(function(user) {
+            delete user.password;
+        });
+        var userId;
+
+        users.insert({
+            name: 'admin',
+            password: 'ñor'
+        }).then(function(user) {
+            userId = user._id;
+            test.strictEqual(user.name, 'admin');
+            test.strictEqual(user.password, undefined);
+        }).then(function() {
+            return users.findById(userId);
+        }).then(function(user) {
+            test.strictEqual(user.name, 'admin');
+            test.strictEqual(user.password, undefined);
+            return users.findAndModify(userId, {
+                name: 'admin2'
+            });
+        }).then(function(user) {
+            test.strictEqual(user.name, 'admin2');
+            test.strictEqual(user.password, undefined);
+        }).fail(function(err) {
+            test.ok(false, err.stack);
+        }).then(function() {
+            test.done();
+        });
     }
 };
