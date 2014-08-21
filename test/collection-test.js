@@ -126,5 +126,67 @@ module.exports = {
         }).then(function() {
             test.done();
         });
+    },
+    testValidator: function(test) {
+        test.expect(3);
+
+        var users = new Collection(db, 'users');
+
+        users.setValidator(function(user, insert) {
+            if (insert) {
+                var valid = user.name && user.password;
+                if (valid) {
+                    return users.find({
+                        name: user.name
+                    }, true).then(function(otherUser) {
+                        if (otherUser) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            } else {
+                for (var key in user) {
+                    if (key !== 'password') {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+
+        var userId;
+
+        users.insert({
+            name: 'admin'
+        }).fail(function(err) {
+            console.log(JSON.stringify(err));
+            test.ok(err);
+            return users.insert({
+                name: 'admin',
+                password: 'ñor'
+            });
+        }).then(function(user) {
+            userId = user._id;
+            return users.findAndModify(user._id, {
+                name: 'admin2'
+            });
+        }).fail(function(err) {
+            console.log(JSON.stringify(err));
+            test.ok(err);
+            return users.findAndModify(userId, {
+                password: 'do'
+            });
+        }).then(function(user) {
+            console.log(user);
+            test.strictEqual(user.password, 'do');
+        }).fail(function(err) {
+            test.ok(false, 'Final error: ' + JSON.stringify(err));
+        }).then(function() {
+            test.done();
+        });
     }
 };
