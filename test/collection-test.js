@@ -10,7 +10,7 @@ module.exports = {
                 console.log(err);
             }
             db = database;
-            db.collection('games').remove(function() {
+            db.dropDatabase(function() {
                 callback();
             });
         });
@@ -34,10 +34,11 @@ module.exports = {
                     test.strictEqual('My title', game.title);
                 });
         }).then(function() {
-            return games.setProperty(id, 'title', 'Other title')
-                .then(function(result) {
-                    test.ok(result);
-                });
+            return games.findAndModify(id, {
+                'title': 'Other title'
+            }).then(function(result) {
+                test.ok(result);
+            });
         }).then(function() {
             return games.findById(id)
                 .then(function(game) {
