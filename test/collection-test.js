@@ -140,21 +140,21 @@ module.exports = {
                         name: user.name
                     }, true).then(function(otherUser) {
                         if (otherUser) {
-                            return false;
+                            return null;
                         } else {
-                            return true;
+                            return user;
                         }
                     });
                 } else {
-                    return false;
+                    return null;
                 }
             } else {
                 for (var key in user) {
                     if (key !== 'password') {
-                        return false;
+                        return null;
                     }
                 }
-                return true;
+                return user;
             }
         });
 
