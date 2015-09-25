@@ -1,18 +1,23 @@
 {
     "author": "anserran <angelserranolaguna@gmail.com>",
     "dependencies": {
-        "q": "1.0.1",
-        "async": "0.9.x",
-        "mongodb": "1.4.8"
+        "q": "1.4.x",
+        "async": "1.4.x",
+        "mongodb": "2.0.x"
     },
     "description": "Library to interact with collection of objects in a mongo database",
     "devDependencies": {
-        "nodeunit": ">0.0.0"
+        "coveralls": "*",
+        "istanbul": "*",
+        "jshint": "*",
+        "nodeunit": "0.9.x"
     },
     "name": "easy-collections",
     "preferGlobal": "false",
     "scripts": {
-        "test": "nodeunit test/"
+        "lint": "jshint --verbose .",
+        "test": "nodeunit test/",
+        "test-travis": "npm run lint && ./node_modules/istanbul/lib/cli.js cover ./node_modules/nodeunit/bin/nodeunit test/"
     },
-    "version": "0.0.1"
+    "version": "0.0.4"
 }
