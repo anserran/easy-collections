@@ -1,0 +1,5 @@
+# Easy Collections
+
+[![Build Status](https://travis-ci.org/RotaruDan/easy-collections.svg?branch=master)](https://travis-ci.org/RotaruDan/easy-collections) [![Coverage Status](https://coveralls.io/repos/RotaruDan/easy-collections/badge.svg?branch=master&service=github)](https://coveralls.io/github/RotaruDan/easy-collections?branch=master) [![Dependency Status](https://david-dm.org/RotaruDan/easy-collections.svg)](https://david-dm.org/RotaruDan/easy-collections) [![devDependency Status](https://david-dm.org/RotaruDan/easy-collections/dev-status.svg)](https://david-dm.org/RotaruDan/easy-collections#info=devDependencies) [![Code Climate](https://codeclimate.com/github/RotaruDan/easy-collections/badges/gpa.svg)](https://codeclimate.com/github/RotaruDan/easy-collections) [![Issue Stats](http://issuestats.com/github/RotaruDan/easy-collections/badge/pr?style=flat)](http://issuestats.com/github/RotaruDan/easy-collections) [![Issue Stats](http://issuestats.com/github/RotaruDan/easy-collections/badge/issue?style=flat)](http://issuestats.com/github/RotaruDan/easy-collections)
+
+An easy way to manage your MongoDB collections.
