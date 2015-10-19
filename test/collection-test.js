@@ -96,7 +96,7 @@ module.exports = {
             });
     },
     testFilter: function (test) {
-        test.expect(6);
+        test.expect(8);
 
         var users = new Collection(db, 'users');
         users.setFilter(function (user) {
@@ -119,6 +119,10 @@ module.exports = {
             return users.findAndModify(userId, {
                 name: 'admin2'
             });
+        }).then(function (user) {
+            test.strictEqual(user.name, 'admin2');
+            test.strictEqual(user.password, undefined);
+            return users.removeById(user._id);
         }).then(function (user) {
             test.strictEqual(user.name, 'admin2');
             test.strictEqual(user.password, undefined);
