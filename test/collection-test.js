@@ -5,7 +5,7 @@ var db;
 
 module.exports = {
     setUp: function (callback) {
-        MongoClient.connect('mongodb://127.0.0.1:27017/test', function (err, database) {
+        MongoClient.connect('mongodb://127.0.0.1:27017/easy-collection-test', function (err, database) {
             if (err) {
                 console.log(err);
             }
@@ -16,8 +16,10 @@ module.exports = {
         });
     },
     tearDown: function (callback) {
-        db.close();
-        callback();
+        db.dropDatabase(function () {
+            db.close();
+            callback();
+        });
     },
     testCollection: function (test) {
         test.expect(7);
@@ -200,5 +202,23 @@ module.exports = {
         }).then(function () {
             test.done();
         });
+    },
+    testExist: function (test) {
+        test.expect(2);
+        Collection.exists(db, 'ñor')
+            .then(function (exists) {
+                test.ok(!exists);
+                var collection = new Collection(db, 'totally_exists');
+                return collection.insert({}).then(function () {
+                    return Collection.exists(db, 'totally_exists').then(function (result) {
+                        test.ok(result);
+                    });
+                });
+            }).fail(function (err) {
+                console.log(err);
+                test.ok(false);
+            }).then(function () {
+                test.done();
+            });
     }
 };
