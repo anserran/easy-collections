@@ -77,18 +77,16 @@ module.exports = {
         var ids = [];
         var games = new Collection(db, 'games');
 
-        var pre = function (objectID, next) {
+        games.setPreRemove(function () {
             ids.pop();
-            next();
-        };
-        games.preRemove(pre);
+        });
 
-        games.insert()
+        games.insert({})
             .then(function (game) {
                 ids.push(game._id);
-                return games.insert().then(function (game) {
+                return games.insert({}).then(function (game) {
                     ids.push(game._id);
-                    return games.insert().then(function (game) {
+                    return games.insert({}).then(function (game) {
                         ids.push(game._id);
                     });
                 });
@@ -110,6 +108,7 @@ module.exports = {
         var users = new Collection(db, 'users');
         users.setFilter(function (user) {
             delete user.password;
+            return user;
         });
         var userId;
 
@@ -136,7 +135,8 @@ module.exports = {
             test.strictEqual(user.name, 'admin2');
             test.strictEqual(user.password, undefined);
         }).fail(function (err) {
-            test.ok(false, err.stack);
+            console.log(err);
+            test.ok(false);
         }).then(function () {
             test.done();
         });
@@ -146,30 +146,30 @@ module.exports = {
 
         var users = new Collection(db, 'users');
 
-        users.setValidator(function (user, insert) {
-            if (insert) {
-                var valid = user.name && user.password;
-                if (valid) {
-                    return users.find({
-                        name: user.name
-                    }, true).then(function (otherUser) {
-                        if (otherUser) {
-                            return null;
-                        } else {
-                            return user;
-                        }
-                    });
-                } else {
+        users.setInsertValidator(function (user) {
+            var valid = user.name && user.password;
+            if (valid) {
+                return users.find({
+                    name: user.name
+                }, true).then(function (otherUser) {
+                    if (otherUser) {
+                        return null;
+                    } else {
+                        return user;
+                    }
+                });
+            } else {
+                return false;
+            }
+        });
+
+        users.setUpdateValidator(function (user, id) {
+            for (var key in user) {
+                if (key !== 'password') {
                     return null;
                 }
-            } else {
-                for (var key in user) {
-                    if (key !== 'password') {
-                        return null;
-                    }
-                }
-                return user;
             }
+            return user;
         });
 
         var userId;
