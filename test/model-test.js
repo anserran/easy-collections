@@ -3,6 +3,11 @@ var Collection = require('../lib/collection');
 var MongoClient = require('mongodb').MongoClient;
 var db;
 
+
+function MyObject() {
+
+}
+
 module.exports = {
     setUp: function (callback) {
         MongoClient.connect('mongodb://127.0.0.1:27017/easy-collection-test', function (err, database) {
@@ -55,6 +60,10 @@ module.exports = {
                         type: 'boolean'
                     }
                 }
+            },
+            classObject: {
+                type: 'object',
+                class: 'MyObject'
             }
         };
 
@@ -68,7 +77,8 @@ module.exports = {
                     password: 'admin',
                     age: 10,
                     married: true,
-                    resources: {create: 5, read: false}
+                    resources: {create: 5, read: false},
+                    classObject: new MyObject()
                 });
             }).then(function (user) {
                 test.ok(user);
