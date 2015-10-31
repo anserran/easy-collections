@@ -23,7 +23,7 @@ module.exports = {
     },
     testModel: function (test) {
 
-        test.expect(7);
+        test.expect(8);
 
         var model = {
             'user': {
@@ -39,6 +39,10 @@ module.exports = {
             },
             'married': {
                 type: 'boolean'
+            },
+            'enabled': {
+                type: 'boolean',
+                default: true
             },
             'resources': {
                 type: 'object',
@@ -68,6 +72,7 @@ module.exports = {
                 });
             }).then(function (user) {
                 test.ok(user);
+                test.ok(user.enabled);
                 return collection.findAndModify(user._id, {age: 14, married: false})
             }).then(function (user) {
                 test.strictEqual(user.age, 14);
